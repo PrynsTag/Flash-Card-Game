@@ -10,6 +10,24 @@ import java.util.Locale;
 public record Question(String term, String definition) {
 
     /**
+     * Returns the term of the question.
+     *
+     * @return the term of the question.
+     */
+    public String getTerm() {
+        return term;
+    }
+
+    /**
+     * Returns the definition of the question.
+     *
+     * @return the definition of the question.
+     */
+    public String getDefinition() {
+        return definition;
+    }
+
+    /**
      * Returns the if the question is answered correctly.
      * @param answer the answer given by the user.
      *               The answer is considered correct if it is equal to the definition of the question.
