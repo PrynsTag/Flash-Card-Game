@@ -4,7 +4,8 @@ import java.util.Locale;
 
 /**
  * com.princevelasco.FlashCardGame.Question class for storing the term and its definition.
- * @param term the term of the question.
+ *
+ * @param term       the term of the question.
  * @param definition the definition of the question.
  */
 public record Question(String term, String definition) {
@@ -29,6 +30,7 @@ public record Question(String term, String definition) {
 
     /**
      * Returns the if the question is answered correctly.
+     *
      * @param answer the answer given by the user.
      *               The answer is considered correct if it is equal to the definition of the question.
      *               The answer is considered incorrect if it is not equal to the definition of the question.
