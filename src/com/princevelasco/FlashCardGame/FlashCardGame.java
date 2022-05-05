@@ -23,22 +23,6 @@ class FlashCardGame {
 
 
     /**
-     * This method clears the screen.
-     */
-    private void clearScreen() {
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                Runtime.getRuntime().exec(new String[]{"clear"});
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
      * This is the string representation of the title of the program.
      *
      * @return The title of the game.
