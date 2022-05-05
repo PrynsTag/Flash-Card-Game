@@ -2,13 +2,16 @@ package com.princevelasco.FlashCardGame;
 
 import java.util.Locale;
 
+import static com.princevelasco.FlashCardGame.Cards.flashcards;
+import static com.princevelasco.FlashCardGame.utils.Map.getKeysByValue;
+
 /**
  * com.princevelasco.FlashCardGame.Question class for storing the term and its definition.
  *
  * @param term       the term of the question.
  * @param definition the definition of the question.
  */
-public record Question(String term, String definition) {
+record Question(String term, String definition) {
 
     /**
      * Returns the term of the question.
@@ -37,11 +40,16 @@ public record Question(String term, String definition) {
      *               (case-insensitive)
      *               (trimmed)
      */
-    public void isCorrect(String answer) {
+    void isCorrect(String answer) {
         if (answer.toLowerCase(Locale.ROOT).trim().equals(definition)) {
             System.out.println("Your answer is right!");
         } else {
-            System.out.println("Your answer is wrong...");
+            if (flashcards.containsValue(answer)) {
+                String otherTermCorrect = getKeysByValue(flashcards, answer);
+                System.out.printf("Wrong. The right answer is \"%s\", but your definition is correct for \"%s\".\n", definition, otherTermCorrect);
+            } else {
+                System.out.printf("Wrong. The right answer is \"%s\".\n", definition);
+            }
         }
     }
 }
