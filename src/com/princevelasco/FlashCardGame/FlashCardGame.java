@@ -1,7 +1,5 @@
 package com.princevelasco.FlashCardGame;
 
-import java.io.IOException;
-
 /**
  * This class is the main class of the program. It contains the main method.
  *
