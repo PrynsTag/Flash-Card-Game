@@ -1,49 +1,126 @@
 package com.princevelasco.FlashCardGame;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import static com.princevelasco.FlashCardGame.utils.Map.getKeysByValue;
 
 public class Cards {
     static Map<String, String> flashcards = new HashMap<>();
     Scanner scanner = new Scanner(System.in).useDelimiter("\\n");
 
-    /**
-     * Add a flashcards to the game.
-     */
-    void inputCards() {
-        System.out.print("Input the number of cards:\n");
-        int numCards = scanner.nextInt();
-
-        for (int i = 1; i <= numCards; i++) {
-            System.out.printf("Card #%s:\n", i);
-            String term = scanner.next();
-            while (flashcards.containsKey(term)) {
-                System.out.printf("The term \"%s\" already exists. Try again:\n", term);
-                term = scanner.next();
-            }
-
-            System.out.printf("The definition for card #%s:\n", i);
-            String definition = scanner.next();
-            while (flashcards.containsValue(definition)) {
-                System.out.printf("The definition \"%s\" already exists. Try again:\n", definition);
-                definition = scanner.next();
-            }
-
-            flashcards.put(term, definition);
+    void addCard() {
+        System.out.println("The card:");
+        String term = scanner.next();
+        if (flashcards.containsKey(term)) {
+            System.out.printf("The card \"%s\" already exists.\n\n", term);
+            return;
         }
+
+        System.out.println("The definition of the card:");
+        String definition = scanner.next();
+        if (flashcards.containsValue(definition)) {
+            System.out.printf("The definition \"%s\" already exists.\n\n", definition);
+            return;
+        }
+
+        flashcards.put(term, definition);
+        if (flashcards.containsKey(term) && flashcards.containsValue(definition)) {
+            System.out.printf("The pair (\"%s\":\"%s\") has been added.\n", term, definition);
+        }
+
+        System.out.println();
     }
 
-    /**
-     * Ask the user to input a definition and check if it is correct for a given term.
-     */
-    void play() {
-        for (Map.Entry<String, String> card : flashcards.entrySet()) {
-            System.out.printf("Print the definition of \"%s\":\n", card.getKey());
+    void removeCard() {
+        System.out.println("Which card?");
+        String term = scanner.next();
+
+        if (flashcards.containsKey(term)) {
+            flashcards.remove(term);
+            System.out.println("The card has been removed.");
+        }
+
+        System.out.println();
+    }
+
+    void importCards() {
+        System.out.println("File name:");
+        File file = new File(scanner.next());
+        int numCards = 0;
+
+        try (Scanner reader = new Scanner(file)) {
+            reader.nextLine(); // skip header
+
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                String[] parts = line.split(",");
+
+                flashcards.put(parts[0], parts[1]);
+                numCards++;
+            }
+            System.out.printf("%s cards have been loaded.\n", numCards);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+        }
+
+        System.out.println();
+    }
+
+    void exportCards() {
+        System.out.println("File name:");
+        File file = new File(scanner.next());
+        int numCards = 0;
+
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("term,definition");
+            for (Map.Entry<String, String> card : flashcards.entrySet()) {
+                writer.println(card.getKey() + "," + card.getValue());
+                numCards++;
+            }
+
+            System.out.printf("%d cards have been saved.\n", numCards);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+        }
+
+        System.out.println();
+    }
+
+    void askCard() {
+        System.out.println("How many times to ask?");
+        int numToAsk = scanner.nextInt();
+
+        List<String> terms = new ArrayList<>(flashcards.keySet());
+        for (int i = 0; i < numToAsk; i++) {
+            int randomIndex = (int) (Math.random() * terms.size());
+            String term = terms.get(randomIndex);
+
+            System.out.printf("Print the definition of \"%s\":\n", term);
             String answer = scanner.next();
 
-            Question question = new Question(card.getKey(), card.getValue());
-            question.isCorrect(answer);
+            String correctAnswer = flashcards.get(term);
+            if (correctAnswer.equals(answer)) {
+                System.out.println("Correct!");
+            } else {
+                if (flashcards.containsValue(answer)) {
+                    String otherTermCorrect = getKeysByValue(flashcards, answer);
+                    System.out.printf("Wrong. The right answer is \"%s\", but your definition is correct for \"%s\".\n", correctAnswer, otherTermCorrect);
+                } else {
+                    System.out.printf("Wrong. The right answer is \"%s\".\n", correctAnswer);
+                }
+            }
         }
+        System.out.println();
+    }
+
+    void exit() {
+        System.out.println("Bye bye!");
     }
 }
