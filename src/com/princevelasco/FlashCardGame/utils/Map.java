@@ -1,13 +1,14 @@
 package com.princevelasco.FlashCardGame.utils;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Map {
-    public static <T, E> String getKeysByValue(java.util.Map<T, E> map, E value) {
-        return String.valueOf(map.entrySet()
+    public static String getKeysByValue(java.util.Map<String, String> map, String value) {
+        return map.entrySet()
                 .stream()
                 .filter(entry -> Objects.equals(entry.getValue(), value))
                 .map(java.util.Map.Entry::getKey)
-                .findFirst());
+                .collect(Collectors.toSet()).stream().findFirst().orElse(null);
     }
 }
