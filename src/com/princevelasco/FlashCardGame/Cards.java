@@ -45,6 +45,8 @@ public class Cards {
         if (flashcards.containsKey(term)) {
             flashcards.remove(term);
             System.out.println("The card has been removed.");
+        } else {
+            System.out.printf("Can't remove \"%s\": there is no such card.\n", term);
         }
 
         System.out.println();
