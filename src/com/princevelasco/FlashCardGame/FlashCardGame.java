@@ -1,5 +1,7 @@
 package com.princevelasco.FlashCardGame;
 
+import java.util.Scanner;
+
 /**
  * This class is the main class of the program. It contains the main method.
  *
@@ -13,10 +15,24 @@ class FlashCardGame {
      * This is the main runner of the program. It contains the start method.
      */
     void start() {
-        Cards cards = new Cards();
+        Scanner scanner = new Scanner(System.in);
+        String action;
 
-        cards.inputCards();
-        cards.play();
+        Cards cards = new Cards();
+        do {
+            System.out.println("Input the action (add, remove, import, export, ask, exit):");
+            action = scanner.nextLine();
+
+            switch (action) {
+                case "add" -> cards.addCard();
+                case "remove" -> cards.removeCard();
+                case "import" -> cards.importCards();
+                case "export" -> cards.exportCards();
+                case "ask" -> cards.askCard();
+                case "exit" -> cards.exit();
+                default -> System.out.println("Invalid action.\n");
+            }
+        } while (!action.equals("exit"));
     }
 
 
