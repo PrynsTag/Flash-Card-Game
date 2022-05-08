@@ -12,11 +12,22 @@ import java.util.Scanner;
 
 import static com.princevelasco.FlashCardGame.utils.Map.getKeysByValue;
 
+/**
+ * This class is used to store and manage the cards.
+ *
+ * @author Prince Velasco
+ * @version 1.0
+ * @since 2022-02-24
+ * @see FlashCardGame
+ */
 public class Cards {
     static Map<String, String> flashcards = new HashMap<>();
     static Map<String, Integer> cardMistakes = new HashMap<>();
     Scanner scanner = new Scanner(System.in).useDelimiter("\\n");
 
+    /**
+     * This method is used to add a new card.
+     */
     void addCard() {
         System.out.println("The card:");
         String term = scanner.next();
@@ -40,6 +51,9 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to remove cards from the flashcard deck.
+     */
     void removeCard() {
         System.out.println("Which card?");
         String term = scanner.next();
@@ -54,6 +68,9 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to import cards from a file.
+     */
     void importCards() {
         System.out.println("File name:");
         File file = new File(scanner.next());
@@ -78,6 +95,9 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to export cards to a file.
+     */
     void exportCards() {
         System.out.println("File name:");
         File file = new File(scanner.next());
@@ -98,6 +118,10 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to ask a question on the cards in the flashcard deck.
+     * It also keeps track of the number of mistakes made.
+     */
     void askCard() {
         System.out.println("How many times to ask?");
         int numToAsk = scanner.nextInt();
@@ -128,6 +152,9 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to check the number of mistakes made on all cards.
+     */
     void stats() {
         if (cardMistakes.isEmpty()) {
             System.out.println("There are no cards with errors.");
@@ -154,6 +181,9 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to reset the number of mistakes made on all cards.
+     */
     void resetStats() {
         cardMistakes.clear();
         System.out.println("Card statistics have been reset.\n");
@@ -161,6 +191,9 @@ public class Cards {
         System.out.println();
     }
 
+    /**
+     * This method is used to exit and print a farewell message.
+     */
     void exit() {
         System.out.println("Bye bye!");
     }
