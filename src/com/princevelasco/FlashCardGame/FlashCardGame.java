@@ -20,7 +20,7 @@ class FlashCardGame {
 
         Cards cards = new Cards();
         do {
-            System.out.println("Input the action (add, remove, import, export, ask, exit):");
+            System.out.println("Input the action (add, remove, import, export, ask, exit, hardest card, reset stats):");
             action = scanner.nextLine();
 
             switch (action) {
@@ -29,6 +29,8 @@ class FlashCardGame {
                 case "import" -> cards.importCards();
                 case "export" -> cards.exportCards();
                 case "ask" -> cards.askCard();
+                case "hardest card" -> cards.stats();
+                case "reset stats" -> cards.resetStats();
                 case "exit" -> cards.exit();
                 default -> System.out.println("Invalid action.\n");
             }

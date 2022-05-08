@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import static com.princevelasco.FlashCardGame.utils.Map.getKeysByValue;
 
 public class Cards {
     static Map<String, String> flashcards = new HashMap<>();
+    static Map<String, Integer> cardMistakes = new HashMap<>();
     Scanner scanner = new Scanner(System.in).useDelimiter("\\n");
 
     void addCard() {
@@ -65,6 +67,7 @@ public class Cards {
                 String[] parts = line.split(",");
 
                 flashcards.put(parts[0], parts[1]);
+                cardMistakes.put(parts[0], Integer.parseInt(parts[2]));
                 numCards++;
             }
             System.out.printf("%s cards have been loaded.\n", numCards);
@@ -81,9 +84,9 @@ public class Cards {
         int numCards = 0;
 
         try (PrintWriter writer = new PrintWriter(file)) {
-            writer.println("term,definition");
+            writer.println("term,definition,mistakes");
             for (Map.Entry<String, String> card : flashcards.entrySet()) {
-                writer.println(card.getKey() + "," + card.getValue());
+                writer.println(card.getKey() + "," + card.getValue() + "," + cardMistakes.getOrDefault(card.getKey(), 0));
                 numCards++;
             }
 
@@ -103,6 +106,7 @@ public class Cards {
         for (int i = 0; i < numToAsk; i++) {
             int randomIndex = (int) (Math.random() * terms.size());
             String term = terms.get(randomIndex);
+            int mistakes = 0;
 
             System.out.printf("Print the definition of \"%s\":\n", term);
             String answer = scanner.next();
@@ -111,6 +115,8 @@ public class Cards {
             if (correctAnswer.equals(answer)) {
                 System.out.println("Correct!");
             } else {
+                cardMistakes.put(term, cardMistakes.getOrDefault(term, mistakes) + 1);
+
                 if (flashcards.containsValue(answer)) {
                     String otherTermCorrect = getKeysByValue(flashcards, answer);
                     System.out.printf("Wrong. The right answer is \"%s\", but your definition is correct for \"%s\".\n", correctAnswer, otherTermCorrect);
@@ -119,6 +125,39 @@ public class Cards {
                 }
             }
         }
+        System.out.println();
+    }
+
+    void stats() {
+        if (cardMistakes.isEmpty()) {
+            System.out.println("There are no cards with errors.");
+            return;
+        }
+
+        List<String> maxKeys = new ArrayList<>();
+        int maxValue = (Collections.max(cardMistakes.values()));
+
+        for (Map.Entry<String, Integer> entry : cardMistakes.entrySet()) {
+            if (entry.getValue() == maxValue) {
+                maxKeys.add(String.format("\"%s\"", entry.getKey()));
+            }
+        }
+
+        if (maxKeys.size() > 1) {
+            String values = String.join(", ", maxKeys);
+            System.out.printf("The hardest cards are %s. You have %d errors answering them.\n", values, maxValue);
+        } else if (maxKeys.size() == 1) {
+            System.out.printf("The hardest card is %s. You have %s errors answering it.\n", maxKeys.get(0), maxValue);
+
+        }
+
+        System.out.println();
+    }
+
+    void resetStats() {
+        cardMistakes.clear();
+        System.out.println("Card statistics have been reset.\n");
+
         System.out.println();
     }
 
